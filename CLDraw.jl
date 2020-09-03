@@ -21,7 +21,7 @@ using NamedArrays
 #   `simdraw_multhr(n)` is a multithreaded version of `simdraw(n)`. To simulate a single
 #   draw, you can use `getdraw(seeded, unseeded, group, assoc)`.
 =#
-
+##
 seeded = ["PSG", "Bayern", "Man City", "Juventus",
           "Liverpool", "Barcelona", "RB Leipzig", "Valencia"]
 shortseed = ["PSG", "BAY", "MCI", "JUV", "LIV", "BAR", "RBL", "VAL"] # short names for seeded
@@ -40,6 +40,7 @@ group = merge(Dict(seeded[i] => groups[i] for i in eachindex(seeded)),
               Dict(unseeded[i] => groups[i] for i in eachindex(unseeded)))
 assoc = merge(Spain, France, Germany, England, Italy)
 
+##
 function matchable(team, opponent, group, assoc)
     # Checks if `team` and `opponent` are from different groups and associations.
     diffgroup = group[team] != group[opponent]
@@ -47,6 +48,7 @@ function matchable(team, opponent, group, assoc)
     return diffgroup && diffassoc
 end
 
+##
 function getmatches(team, seeded, unseeded, group, assoc)
     # Returns the possible opponents of `team`
     opponents = team in seeded ? unseeded : seeded
@@ -55,12 +57,14 @@ function getmatches(team, seeded, unseeded, group, assoc)
     return matches
 end
 
+##
 function draw(team, seeded, unseeded, group, assoc)
     # Chooses an opponent randomly from the potential opponents
     possible = getmatches(team, seeded, unseeded, group, assoc)
     return rand(possible)
 end
 
+##
 function getdraw(seeded, unseeded, group, assoc)
     # Takes the unmatched teams in `seeded` and `unseeded` and generates a random draw
     # according to CL rules.
@@ -127,6 +131,7 @@ function getdraw(seeded, unseeded, group, assoc)
     # Recursively calls itself on the remaining unmatched teams.
 end
 
+##
 function simdraw(n, seeded=seeded, unseeded=unseeded, group=group, assoc=assoc)
     count = zeros(Int, length(seeded), length(unseeded))
     for ii in 1:n
@@ -140,6 +145,7 @@ function simdraw(n, seeded=seeded, unseeded=unseeded, group=group, assoc=assoc)
     return count
 end
 
+##
 function simdraw_multhr(n, seeded=seeded, unseeded=unseeded, group=group, assoc=assoc)
     nseeds = length(seeded)
     nunseeds = length(unseeded)
@@ -153,6 +159,7 @@ function simdraw_multhr(n, seeded=seeded, unseeded=unseeded, group=group, assoc=
     return dropdims(sum(count, dims=3); dims=3)
 end
 
+##
 function showteams(data, seeded=shortseed, unseeded=shortuns)
     return NamedArray(data, (seeded, unseeded), ("Away", "Home"))
 end
