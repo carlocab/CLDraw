@@ -22,23 +22,24 @@ using NamedArrays
 #   draw, you can use `getdraw(seeded, unseeded, group, assoc)`.
 =#
 ##
-seeded = ["PSG", "Bayern", "Man City", "Juventus",
-          "Liverpool", "Barcelona", "RB Leipzig", "Valencia"]
-shortseed = ["PSG", "BAY", "MCI", "JUV", "LIV", "BAR", "RBL", "VAL"] # short names for seeded
-unseeded = ["Real Madrid", "Tottenham", "Atalanta", "Atletico",
-            "Napoli", "Dortmund", "Lyon", "Chelsea"]
-shortuns = ["RMA", "TOT", "ATA", "ATL", "NAP", "DOR", "LYO", "CHL"] # short names for unseeded
+seeded = ["Bayern", "Real Madrid", "Man City", "Liverpool",
+          "Chelsea", "Dortmund", "Juventus", "PSG"]
+shortseed = ["BAY", "RMA", "MCI", "LIV", "CHE", "DOR", "JUV", "PSG"] # short names for seeded
+unseeded = ["Atletico", "Monchengladbach", "Porto", "Atalanta",
+            "Sevilla", "Lazio", "Barcelona", "RB Leipzig"]
+shortuns = ["ATM", "MGB", "POR", "ATL", "SEV", "LAZ", "BAR", "RBL"] # short names for unseeded
 groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
-Spain = Dict(team => "ESP" for team in ["Real Madrid", "Barcelona", "Atletico", "Valencia"])
+Spain = Dict(team => "ESP" for team in ["Real Madrid", "Barcelona", "Atletico", "Valencia", "Sevilla"])
 France = Dict(team => "FRA" for team in ["PSG", "Lyon"])
-Germany = Dict(team => "GER" for team in ["Bayern", "RB Leipzig", "Dortmund"])
+Germany = Dict(team => "GER" for team in ["Bayern", "RB Leipzig", "Dortmund", "Monchengladbach"])
 England = Dict(team => "ENG" for team in  ["Man City", "Liverpool", "Tottenham", "Chelsea"])
-Italy = Dict(team => "ITA" for team in ["Juventus", "Napoli", "Atalanta"])
+Italy = Dict(team => "ITA" for team in ["Juventus", "Napoli", "Atalanta", "Lazio"])
+Portugal = Dict(team => "POR" for team in ["Porto"])
 
 group = merge(Dict(seeded[i] => groups[i] for i in eachindex(seeded)),
               Dict(unseeded[i] => groups[i] for i in eachindex(unseeded)))
-assoc = merge(Spain, France, Germany, England, Italy)
+assoc = merge(Spain, France, Germany, England, Italy, Portugal)
 
 ##
 function matchable(team, opponent, group, assoc)
@@ -68,7 +69,7 @@ end
 function getdraw(seeded, unseeded, group, assoc)
     # Takes the unmatched teams in `seeded` and `unseeded` and generates a random draw
     # according to CL rules.
-    # 
+    #
     # When the unmatched teams impose no restrictions on the remaining matches,
     # an unseeded team is choosen (uniformly) at random. Then an opponent is chosen
     # (uniformly) at random from the eligible seeded teams.
@@ -163,4 +164,3 @@ end
 function showteams(data, seeded=shortseed, unseeded=shortuns)
     return NamedArray(data, (seeded, unseeded), ("Away", "Home"))
 end
-
